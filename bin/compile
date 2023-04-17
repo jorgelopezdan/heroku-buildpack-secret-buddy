@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
+set -o errexit    # always exit on error
+set -o pipefail   # don't ignore exit codes when piping output
+# debug
+# set -x
+
+# fetch HEROKU env var
+BP_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
+x="$SECRET_BUDDY"
+
+## Check if X has length
+
+if [ -z "$x" ]; then
+  echo "No secrets found"
+  exit 0
+fi
+y=$BP_DIR/secret-buddy-buildpack
+export $($y)
+
+
+
+
