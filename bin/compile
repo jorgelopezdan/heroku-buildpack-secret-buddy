@@ -9,19 +9,21 @@ set -o errexit    # always exit on error
 set -o pipefail   # don't ignore exit codes when piping output
 # debug
 # set -x
-
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
 # fetch HEROKU env var
-BP_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
-x="$SECRET_BUDDY"
+BUILDPACK_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
+SECRETBUDDY="$SECRET_BUDDY"
 
 ## Check if X has length
 
-if [ -z "$x" ]; then
+if [ -z "$SECRETBUDDY" ]; then
   echo "No secrets found"
   exit 0
 fi
-y=$BP_DIR/secret-buddy-buildpack
-export $($y)
+BUILDPACK=$BUILDPACK_DIR/secret-buddy-buildpack
+export $($BUILDPACK)
 
 
 

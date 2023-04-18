@@ -11,18 +11,15 @@ type ConsolidatedSecret struct {
 	Previous map[string]string `json:"previous"` // Previous secret values, useful for rollbacks
 }
 
-func ExportEnvVarsFromMap(env string) error {
+func ExportEnvVarsFromMap(env string) (map[string]string, error) {
 	var consolidatedSecret ConsolidatedSecret
 	err := json.Unmarshal([]byte(env), &consolidatedSecret)
 	if err != nil {
-		return err
+		return nil, err
 
 	}
-	for key, value := range consolidatedSecret.Current {
-		fmt.Printf("%s=%v\n", key, value)
 
-	}
-	return nil
+	return consolidatedSecret.Current, err
 }
 
 func GetEnvVar(envVarName string) (string, error) {
@@ -37,9 +34,14 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	err = ExportEnvVarsFromMap(envVar)
+	consolidatedSecret, err := ExportEnvVarsFromMap(envVar)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	for key, value := range consolidatedSecret {
+		fmt.Printf("%s=%v\n", key, value)
+
+	}
+
 }
