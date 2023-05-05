@@ -40,7 +40,7 @@ func main() {
 		os.Exit(1)
 	}
 	for key, value := range consolidatedSecret {
-		fmt.Printf("%s=%v\n", key, value)
+		fmt.Printf("export %s=%v\n", key, value)
 
 	}
 

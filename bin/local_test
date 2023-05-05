@@ -1,0 +1,21 @@
+
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+# fail fast
+set -e
+
+unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
+set -o errexit    # always exit on error
+set -o pipefail   # don't ignore exit codes when piping output
+# debug
+# set -x
+BUILDPACK_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
+BUILDPACK=$BUILDPACK_DIR/secret-buddy-buildpack
+
+mkdir -p $BUILDPACK_DIR/.profile.d
+
+echo $BUILDPACK_DIR
+echo $BUILDPACK
+
+($BUILDPACK) 2>&1 | tee $BUILDPACK_DIR/.profile.d/secret-buddy.sh
