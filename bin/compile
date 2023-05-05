@@ -30,7 +30,7 @@ export_env_dir() {
 
 
 export_env_dir $ENV_DIR
-SECRETBUDDY="$SECRET_BUDDY"
+SECRETBUDDY="$SECRETBUDDY_ENV"
 if [ -z "$SECRETBUDDY" ]; then
   echo "No secrets found"
   exit 0
@@ -41,6 +41,6 @@ mkdir -p "$BUILD_DIR/.profile.d"
 
 cp $BUILDPACK_DIR/profile/secret-buddy.sh $BUILD_DIR/.profile.d/secret-buddy.sh
 
-($BUILDPACK) 2>&1 | tee $BUILD_DIR/.profile.d/secret-buddy.sh
+($BUILDPACK) > $BUILD_DIR/.profile.d/secret-buddy.sh
 
 cat $BUILD_DIR/.profile.d/secret-buddy.sh

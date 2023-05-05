@@ -29,7 +29,7 @@ func GetEnvVar(envVarName string) (string, error) {
 
 func main() {
 
-	envVar, err := GetEnvVar("SECRET_BUDDY")
+	envVar, err := GetEnvVar("SECRETBUDDY_ENV")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

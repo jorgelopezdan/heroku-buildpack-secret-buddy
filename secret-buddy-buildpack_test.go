@@ -14,18 +14,18 @@ func TestGetEnvVar(t *testing.T) {
 	}{
 		{key: "FOO", value: "bar", err: nil},
 		{key: "coolVar", value: "Oh Yes", err: nil},
-		{key: "SECRET_BUDDY", value: "{\"current\":{\"KEY1\":\"VALUE4\",\"KEY2\":\"VALUE4\"},\"previous\":{\"KEY1\":\"VALUE3\",\"KEY2\":\"VALUE3\"}}", err: nil},
+		{key: "SECRETBUDDY_ENV", value: "{\"current\":{\"KEY1\":\"VALUE4\",\"KEY2\":\"VALUE4\"},\"previous\":{\"KEY1\":\"VALUE3\",\"KEY2\":\"VALUE3\"}}", err: nil},
 	}
 
 	// Set up environment variables for test cases
 	os.Setenv("FOO", "bar")
 	os.Setenv("coolVar", "Oh Yes")
-	os.Setenv("SECRET_BUDDY", "{\"current\":{\"KEY1\":\"VALUE4\",\"KEY2\":\"VALUE4\"},\"previous\":{\"KEY1\":\"VALUE3\",\"KEY2\":\"VALUE3\"}}")
+	os.Setenv("SECRETBUDDY_ENV", "{\"current\":{\"KEY1\":\"VALUE4\",\"KEY2\":\"VALUE4\"},\"previous\":{\"KEY1\":\"VALUE3\",\"KEY2\":\"VALUE3\"}}")
 
 	// Clean up environment variables after tests finish
 	defer os.Unsetenv("FOO")
 	defer os.Unsetenv("coolVar")
-	defer os.Unsetenv("SECRET_BUDDY")
+	defer os.Unsetenv("SECRETBUDDY_ENV")
 
 	// Run tests
 	for _, tc := range testCases {

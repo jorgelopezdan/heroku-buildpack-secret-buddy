@@ -18,4 +18,4 @@ mkdir -p $BUILDPACK_DIR/.profile.d
 echo $BUILDPACK_DIR
 echo $BUILDPACK
 
-($BUILDPACK) 2>&1 | tee $BUILDPACK_DIR/.profile.d/secret-buddy.sh
+($BUILDPACK) > $BUILDPACK_DIR/.profile.d/secret-buddy.sh
