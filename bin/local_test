@@ -18,4 +18,5 @@ mkdir -p $BUILDPACK_DIR/.profile.d
 echo $BUILDPACK_DIR
 echo $BUILDPACK
 
-($BUILDPACK) > $BUILDPACK_DIR/.profile.d/secret-buddy.sh
+($BUILDPACK) > $BUILDPACK_DIR/.profile.d/secret-buddy-env.sh
+source $BUILDPACK_DIR/.profile.d/secret-buddy-env.sh
