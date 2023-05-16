@@ -1,2 +1,4 @@
 # heroku-buildpack-secret-buddy
-Yep yep yep yep
+
+
+This is the Heroku Buildpack for Secret Buddy, still a WIP
