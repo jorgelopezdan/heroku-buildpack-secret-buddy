@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type ConsolidatedSecret struct {
@@ -14,19 +15,39 @@ type ConsolidatedSecret struct {
 func ExportEnvVarsFromMap(env string, rules map[string]string) (map[string]string, error) {
 	var consolidatedSecret ConsolidatedSecret
 	err := json.Unmarshal([]byte(env), &consolidatedSecret)
+	if err != nil {
+		return nil, err
+	}
 	var envVars map[string]string
 	envVars = consolidatedSecret.Current
 	fmt.Println(envVars)
 
 	for key, value := range rules {
-		var previousValue = "previous." + key
-		if value == previousValue {
-			envVars[key] = consolidatedSecret.Previous[key]
+		if strings.Contains(value, ",") {
+			values := strings.Split(value, ",")
+			var stringValue = ""
+			for _, v := range values {
+				valueAndKey := strings.Split(v, ".")
+				if valueAndKey[0] == "current" {
+					stringValue = stringValue + consolidatedSecret.Current[valueAndKey[1]] + ","
+				} else if valueAndKey[0] == "previous" {
+					stringValue = stringValue + consolidatedSecret.Previous[valueAndKey[1]] + ","
+				}
+
+			}
+			stringValue = strings.TrimSuffix(stringValue, ",")
+			envVars[key] = stringValue
+		} else {
+			valueAndKey := strings.Split(value, ".")
+			if valueAndKey[0] == "current" {
+				envVars[key] = consolidatedSecret.Current[valueAndKey[1]]
+			} else if valueAndKey[0] == "previous" {
+				envVars[key] = consolidatedSecret.Previous[valueAndKey[1]]
+			}
+
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
+
 	return envVars, nil
 }
 
@@ -55,7 +76,6 @@ func main() {
 	variableX, err := GetEnvVar("HEROKU_SECRETS_CONFIG")
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
 	}
 
 	rules, err := ParseRules(variableX)
