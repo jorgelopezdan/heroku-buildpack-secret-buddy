@@ -23,7 +23,22 @@ func ExportEnvVarsFromMap(env string, rules map[string]string) (map[string]strin
 	fmt.Println(envVars)
 
 	for key, value := range rules {
-		if strings.Contains(value, ",") {
+
+		if strings.Contains(value, "[") {
+			var stringValue = ""
+			value = strings.Replace(value, "[", "", -1)
+			value = strings.Replace(value, "]", "", -1)
+			values := strings.Split(value, ",")
+			for _, v := range values {
+				valueAndKey := strings.Split(v, ".")
+				if valueAndKey[0] == "current" {
+					stringValue = stringValue + consolidatedSecret.Current[valueAndKey[1]] + ","
+				} else if valueAndKey[0] == "previous" {
+					stringValue = stringValue + consolidatedSecret.Previous[valueAndKey[1]] + ","
+				}
+			}
+
+		} else if strings.Contains(value, ",") {
 			values := strings.Split(value, ",")
 			var stringValue = ""
 			for _, v := range values {
@@ -33,7 +48,6 @@ func ExportEnvVarsFromMap(env string, rules map[string]string) (map[string]strin
 				} else if valueAndKey[0] == "previous" {
 					stringValue = stringValue + consolidatedSecret.Previous[valueAndKey[1]] + ","
 				}
-
 			}
 			stringValue = strings.TrimSuffix(stringValue, ",")
 			envVars[key] = stringValue
