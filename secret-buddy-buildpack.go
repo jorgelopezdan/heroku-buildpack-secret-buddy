@@ -112,8 +112,13 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
 	for key, value := range consolidatedSecret {
-		fmt.Printf("export %s=%v\n", key, value)
+
+		_, present := os.LookupEnv(key)
+		if !present {
+			fmt.Printf("export %s=%v\n", key, value)
+		}
 	}
 
 }
