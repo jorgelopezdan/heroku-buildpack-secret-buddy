@@ -115,9 +115,9 @@ func main() {
 
 	for key, value := range consolidatedSecret {
 
-		_, present := os.LookupEnv(key)
+		env_var := os.Getenv(key)
 
-		if !present {
+		if env_var == "" {
 			fmt.Printf("export %s=%v\n", key, value)
 		}
 	}
