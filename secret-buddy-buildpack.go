@@ -112,8 +112,15 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
 	for key, value := range consolidatedSecret {
-		fmt.Printf("export %s=%v\n", key, value)
+
+		env_var := os.Getenv(key)
+		filter_value := strings.Replace(value, "\n", "\\n", -1)
+		filter_value = strings.Replace(filter_value, "'", "\\\\'", -1)
+		if env_var == "" {
+			fmt.Printf("export %s='%v'\n", key, filter_value)
+		}
 	}
 
 }
