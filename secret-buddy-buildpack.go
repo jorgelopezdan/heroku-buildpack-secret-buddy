@@ -118,7 +118,7 @@ func main() {
 		env_var := os.Getenv(key)
 
 		if env_var == "" {
-			fmt.Printf("export %s=%v\n", key, value)
+			fmt.Printf("export %s='%v'\n", key, value)
 		}
 	}
 
