@@ -17,10 +17,13 @@ BUILDPACK_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
 
 export_env_dir() {
   env_dir=$1
+  echo "env_dir: $env_dir"
   acceptlist_regex=${2:-''}
   denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   if [ -d "$env_dir" ]; then
+    echo "JLD 1"
     for e in $(ls $env_dir); do
+      echo "JLD 2: $e"
       echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
       export "$e=$(cat $env_dir/$e)"
       :
@@ -38,14 +41,17 @@ fi
 
 BUILDPACK=$BUILDPACK_DIR/secret-buddy-buildpack
 
-echo $BUILDPACK_DIR
-echo BUILDPACK
-echo $BUILDPACK
-
+echo "BUILDPACK_DIR: $BUILDPACK_DIR"
+echo "BUILDPACK: $BUILDPACK"
+echo "listing all the files in the buildpack dir:"
 ls -la $BUILDPACK_DIR
-ls -la $BUILDPACK
+echo "listing the buildpack info:"
+ls -all $BUILDPACK
+
+echo "making the build dir"
 mkdir -p "$BUILD_DIR/.profile.d"
 
+echo "copying the secret buddy script to the build dir"
 cp $BUILDPACK_DIR/profile/secret-buddy.sh $BUILD_DIR/.profile.d/secret-buddy.sh
 
 echo "Copying buildpack exec to $BUILD_DIR/.profile.d/secret-buddy-buildpack"
@@ -56,3 +62,10 @@ ls -la $BUILD_DIR
 
 echo "BUILD_DIR/.profile.d"
 ls -la $BUILD_DIR/.profile.d
+
+echo "JLD FOR TESTING HARDCODED"
+echo "export SIDEKIQ_PASSWORD='pepeexport'" >> $BUILD_DIR/export
+
+echo "listing export file..."
+cat $BUILD_DIR/export
+
