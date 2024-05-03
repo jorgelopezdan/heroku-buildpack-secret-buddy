@@ -64,8 +64,9 @@ echo "BUILD_DIR/.profile.d"
 ls -la $BUILD_DIR/.profile.d
 
 echo "JLD FOR TESTING HARDCODED into $BUILDPACK_DIR/export"
-echo "export SIDEKIQ_PASSWORD='pepeexport'" >> $BUILDPACK_DIR/export
+echo "JLD but now with all the secrets"
+# echo "export SIDEKIQ_PASSWORD='pepeexport'" >> $BUILDPACK_DIR/export
+$BUILDPACK >> $BUILDPACK_DIR/export
 
 echo "listing export file..."
 cat $BUILDPACK_DIR/export
-
