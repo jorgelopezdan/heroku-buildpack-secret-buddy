@@ -21,6 +21,9 @@ export_env_dir() {
   denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   if [ -d "$env_dir" ]; then
     for e in $(ls $env_dir); do
+      if [ "$e" = "SECRETBUDDY_ENV" ]; then
+        secretbuddy_env=$(cat $env_dir/$e)
+      fi    
       echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
       export "$e=$(cat $env_dir/$e)"
       :
@@ -30,6 +33,7 @@ export_env_dir() {
 
 
 export_env_dir $ENV_DIR
+# SECRETBUDDY_ENV here is obfuscated (******) because we are using WriteOnlyConfigVar
 SECRETBUDDY="$SECRETBUDDY_ENV"
 if [ -z "$SECRETBUDDY" ]; then
   echo "No secrets found"
@@ -55,8 +59,12 @@ ls -la $BUILD_DIR
 echo "-----> Listing all the files in the profile.d"
 ls -la $BUILD_DIR/.profile.d
 
-echo "-----> Listing the secret buddy env $SECRETBUDDY"
-echo $SECRETBUDDY | jq -r '.current | to_entries[] | "export \(.key)=\(.value)"' > $BUILDPACK_DIR/export
+echo "-----> Exporting all the secrets from secretbuddy_env"
+echo $secretbuddy_env | jq -r '.current | to_entries[] | "export \(.key)=\(.value)"' > $BUILDPACK_DIR/export
 
-echo "-----> Listing the export file"
-cat $BUILDPACK_DIR/export
+echo "-----> Listing the export file info:"
+ls -all $BUILDPACK_DIR/export
+
+# ONLY FOR LOCAL DEBUGGING
+#echo "-----> Listing the export file"
+#cat $BUILDPACK_DIR/export
