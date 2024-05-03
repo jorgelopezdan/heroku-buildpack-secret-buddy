@@ -21,7 +21,10 @@ export_env_dir() {
   denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   if [ -d "$env_dir" ]; then
     for e in $(ls $env_dir); do
-      if [ "$e" = "SECRETBUDDY_ENV" ]; then
+      echo "JLD $e"
+      if [ $e = "SECRETBUDDY_ENV" ]; then
+        echo "JLD found $e"
+        echo "JLD $(cat $env_dir/$e)"
         secretbuddy_env=$(cat $env_dir/$e)
       fi    
       echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
@@ -72,3 +75,4 @@ ls -all $BUILDPACK_DIR/export
 # ONLY FOR LOCAL DEBUGGING
 #echo "-----> Listing the export file"
 #cat $BUILDPACK_DIR/export
+
