@@ -59,6 +59,10 @@ ls -la $BUILD_DIR
 echo "-----> Listing all the files in the profile.d"
 ls -la $BUILD_DIR/.profile.d
 
+# DEBUG
+echo "-----> Listing the secretbuddy_env"
+echo $secretbuddy_env
+
 echo "-----> Exporting all the secrets from secretbuddy_env"
 echo $secretbuddy_env | jq -r '.current | to_entries[] | "export \(.key)=\(.value)"' > $BUILDPACK_DIR/export
 
